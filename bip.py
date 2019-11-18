@@ -11,7 +11,8 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/19788703',  # interpelacje
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/009/001',  # tomaszowka ogolne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/009/002',  # tomaszowka protokoly
-'https://www.bip.czechowice-dziedzice.pl/bipkod/070'  # Konsultacje spoleczne
+'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
+'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012'  # Informacje o srodowisku i jego ochronie
 ]
 
 epuap = {
