@@ -6,7 +6,7 @@ Script gets content of pages and check with file if new version or new document 
 New content is written to bip_new_found.txt file.
 Known documents are stored in bip_docs.txt file.
 
-Script require python 2.7 (not tested with python 3.x)
+Script use python 3.x
 To run type in console python bip.py or double click
 
 ## known issues
