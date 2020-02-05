@@ -13,7 +13,8 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/009/002',  # tomaszowka protokoly
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
-'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865'  # Petycje
+'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje
+'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565'  # Protokoly w komisji skarg i wnioskow
 ]
 
 epuap = {
@@ -29,8 +30,9 @@ epuap = {
     "Komisji Samorzadnosci i Porzadku Publicznego": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Samorz%C4%85dno%C5%9Bci+i+Porz%C4%85dku+Publicznego&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29'
 }
 
-import urllib2
-from HTMLParser import HTMLParser
+import urllib.request as urllib2
+#from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 import unicodedata
 import json
 import datetime
@@ -57,7 +59,7 @@ class MyHTMLParser(HTMLParser):
         if "article-section" == _class:
             id = self.get_attr_value(attrs, "data-announcement-id").encode('ascii','ignore')
             version = self.get_attr_value(attrs, "data-annoucement-version").encode('ascii','ignore')
-            self.section = {"id": id, "v": version, "title": ""}
+            self.section = {"id": str(id), "v": str(version), "title": ""}
             self._tag_counter = 1
         if _class and "title" in _class:
             self._title = tag
@@ -77,7 +79,7 @@ class MyHTMLParser(HTMLParser):
     def handle_data(self, data):
         if self.section and len(data.strip()) > 0 and (self._h2 or self._title):
             if not self.section["title"]:
-                self.section["title"] = unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore')
+                self.section["title"] = str(unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore'))
 
 class TableParser(HTMLParser):
 
@@ -107,7 +109,7 @@ class TableParser(HTMLParser):
             href = self.get_attr_value(attrs, "href")
             self.begin_of_td_data_finished = True
             if "zalId" in href:
-                self.section = {"id": href, "title": self.begin_of_td_data+": \n", "v": href}
+                self.section = {"id": str(href), "title": str(self.begin_of_td_data+": \n"), "v": str(href)}
                 self.a = True
 
     def handle_endtag(self, tag):
@@ -128,13 +130,13 @@ class TableParser(HTMLParser):
     def handle_data(self, data):
         if self.table and self.tr and data.strip():
             if self.td and not self.begin_of_td_data_finished:
-                self.begin_of_td_data += unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore')
+                self.begin_of_td_data += str(unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore'))
             if self.section:
                 if self.a:
                     #print data
-                    self.section["title"] += unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore')
+                    self.section["title"] += str(unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore'))
 def section_found(s, bip, href):
-    print s
+    print(s)
     if s["id"] not in bip or bip[s["id"]] != s["v"]:
         bip[s["id"]] = s["v"]
         #print "On page: {} new version:{}".format(href, s["title"])
@@ -148,11 +150,11 @@ try:
     with open('bip_docs.txt', 'r') as f:
         bip=json.load(f)
 except IOError:
-    print "Could not open bip_docs.txt"
+    print("Could not open bip_docs.txt")
 
 for href in links:
     #continue
-    print "GET {}".format(href)
+    print("GET {}".format(href))
     response = urllib2.urlopen(href)
     html = response.read()
     #print html
@@ -164,8 +166,8 @@ response = urllib2.urlopen('https://gmczechowicedziedzice.peup.pl/eurzad.seam')
 html = response.read()
 cookie = response.headers.get('Set-Cookie')
 
-for title, href in epuap.iteritems():
-    print "GET {} {}".format(title, href)
+for title, href in epuap.items():
+    print("GET {} {}".format(title, href))
     request = urllib2.Request(href)
     request.add_header("cookie", cookie)
     response = urllib2.urlopen(request)
@@ -176,4 +178,5 @@ for title, href in epuap.iteritems():
     parser.feed(html.decode("utf-8"))
 
 with open('bip_docs.txt', 'w') as outfile:
+    print(bip)
     json.dump(bip, outfile)
