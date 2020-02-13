@@ -11,6 +11,10 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/19788703',  # interpelacje
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/009/001',  # tomaszowka ogolne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/009/002',  # tomaszowka protokoly
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/002/001',  # Centrum ogolne
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/002/002',  # Centrum protokoly
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/001',  # Lesisko ogolne
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/002',  # Lesisko protokoly
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje
