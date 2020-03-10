@@ -17,7 +17,8 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/002',  # Lesisko protokoly
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
-'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje
+'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
+'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565'  # Protokoly w komisji skarg i wnioskow
 ]
 
