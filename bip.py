@@ -16,10 +16,13 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/001',  # Lesisko ogolne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/002',  # Lesisko protokoly
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
-'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
-'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565'  # Protokoly w komisji skarg i wnioskow
+'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565',  # Protokoly w komisji skarg i wnioskow
+'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
+'https://www.bip.czechowice-dziedzice.pl/bipkod/008/097', # Obwieszczenia WOJEWODY ŚLĄSKIEGO
+'https://www.bip.czechowice-dziedzice.pl/bipkod/008/086', # Obwieszczenia STAROSTY BIELSKIEGO
+'https://www.bip.czechowice-dziedzice.pl/bipkod/008/132', # Obwieszczenia PREZYDENTA BIELSKA-BIAŁEJ
 ]
 
 epuap = {
@@ -32,7 +35,8 @@ epuap = {
     "Komisji Polityki Spolecznej": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Polityki+Spo%C5%82ecznej&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29',
     "Komisji Rewizyjnej": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Rewizyjnej&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29',
     "Komisji Rozwoju i Rolnictwa": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Rozwoju+i+Rolnictwa&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29',
-    "Komisji Samorzadnosci i Porzadku Publicznego": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Samorz%C4%85dno%C5%9Bci+i+Porz%C4%85dku+Publicznego&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29'
+    "Komisji Samorzadnosci i Porzadku Publicznego": 'https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Rejestr+protoko%C5%82%C3%B3w+z+posiedze%C5%84+Komisji+Samorz%C4%85dno%C5%9Bci+i+Porz%C4%85dku+Publicznego&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%282%29',
+    "Obwieszczenia o wszczetych postepowaniach": "https://gmczechowicedziedzice.peup.pl/eurzad.seam?eurzadNazwa=Obwieszczenia+o+wszcz%C4%99tych+post%C4%99powaniach&actionMethod=eurzad.xhtml%3ApeupAgent.setEurzadMode%283%29"
 }
 
 import urllib.request as urllib2
