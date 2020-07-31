@@ -15,6 +15,9 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/002/002',  # Centrum protokoly
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/001',  # Lesisko ogolne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/005/002',  # Lesisko protokoly
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/006/001',  # Południowe protokoly i uchwały zebrania
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/006/002',  # Południowe Sprawozdania 
+'https://www.bip.czechowice-dziedzice.pl/bipkod/031/002/006/003',  # Południowe uchwały zarządu
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
@@ -106,7 +109,7 @@ except IOError:
     print("Could not open bip_docs.txt")
 
 for href in links:
-    continue
+    # continue
     print("GET {}".format(href))
     response = urllib2.urlopen(href)
     html = response.read()
