@@ -21,7 +21,7 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
-'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565',  # Protokoly w komisji skarg i wnioskow
+#'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565',  # Protokoly w komisji skarg i wnioskow
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/097', # Obwieszczenia WOJEWODY ŚLĄSKIEGO
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/086', # Obwieszczenia STAROSTY BIELSKIEGO
@@ -37,6 +37,7 @@ import json
 import datetime
 from bip_eurzad_utils import get_zamowienia_publiczne, get_rejestry
 from bip_peup import get_from_peup
+import umpage
 
 class MyHTMLParser(HTMLParser):
 
@@ -107,6 +108,8 @@ try:
         bip=json.load(f)
 except IOError:
     print("Could not open bip_docs.txt")
+
+umpage.get_entries(lambda doc: new_eurzad_doc_found(doc, bip))
 
 for href in links:
     # continue
