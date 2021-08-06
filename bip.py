@@ -3,9 +3,9 @@
 # marek.szkowron(at)gmail.com
 # 
 # Skrypt szuka nowych informacji opublikowanych na wybranych stronach:
-# bip.czechowice-dziedzice.pl 
-# czechowice-dziedzice.pl
-# eurzad.finn.pl/gmczechowicedziedzice
+# https://www.bip.czechowice-dziedzice.pl/
+# https://www.czechowice-dziedzice.pl/
+# https://eurzad.finn.pl/gmczechowicedziedzice/#!/
 #
 
 import sys
