@@ -21,6 +21,7 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/070',  # Konsultacje spoleczne
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
+'https://www.bip.czechowice-dziedzice.pl/bipkod/25674068',  # Petycje 2021
 #'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565',  # Protokoly w komisji skarg i wnioskow
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/097', # Obwieszczenia WOJEWODY ŚLĄSKIEGO
@@ -37,7 +38,7 @@ import json
 import datetime
 from bip_eurzad_utils import get_zamowienia_publiczne, get_rejestry
 from bip_peup import get_from_peup
-import umpage
+import um_page
 
 class MyHTMLParser(HTMLParser):
 
@@ -83,33 +84,46 @@ class MyHTMLParser(HTMLParser):
             if not self.section["title"]:
                 self.section["title"] = str(unicodedata.normalize("NFKD", data.strip()).encode('ascii','ignore'))
 
-def section_found(s, bip, href):
+def add_to_bip_if_required(s, bip, print_text):
     print(s)
     if s["id"] not in bip or bip[s["id"]] != s["v"]:
         bip[s["id"]] = s["v"]
         #print "On page: {} new version:{}".format(href, s["title"])
         today_str=datetime.datetime.now().strftime("%Y-%m-%d")
-        f = open("bip_new_found.txt","a+")
-        f.write("{} On page: {} new version:\n{}\r\n".format(today_str, href, s["title"]))
-        f.close() 
+        f = open("bip_new_found.txt", "a+")
+        f.write(print_text(s))
+        f.close()
+
+def section_found(s, bip, href):
+    def text_formater(s, href):
+        today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        return "{} On page: {} new version:\n{}\r\n".format(today_str, href, s["title"])
+
+    add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
+
 
 def new_eurzad_doc_found(doc, bip):
-    if doc["id"] not in bip or bip[doc["id"]] != doc["v"]:
-        bip[doc["id"]] = doc["v"]
-        f = open("bip_new_found.txt","a+")
-        f.write("{} On page: {} new version:\n{}\r\n".format(doc["data"], doc["href"], doc["title"]))
-        f.close() 
-        print("New {} {} {}".format(doc["id"], doc["title"], doc["v"]))
+    add_to_bip_if_required(doc, bip,
+                           lambda s: "{} On page: {} new version:\n{}\r\n".format(s["data"], s["href"], s["title"]))
+
+
+def new_um_news_found(news, bip, href):
+    def text_formater(n):
+        today_str = datetime.datetime.now().strftime("%F %X")
+        return f"{n['date']} {n['title']}\n{href} - fetched: {today_str}\r\n"
+
+    add_to_bip_if_required(news, bip, text_formater)
 
 
 bip = {}
 try:
     with open('bip_docs.txt', 'r') as f:
-        bip=json.load(f)
+        bip = json.load(f)
 except IOError:
     print("Could not open bip_docs.txt")
 
-umpage.get_entries(lambda doc: new_eurzad_doc_found(doc, bip))
+um_page.get_um_komunikaty(lambda s, href: new_um_news_found(s, bip, href))
+um_page.get_um_aktualnosci(lambda s, href: new_um_news_found(s, bip, href))
 
 for href in links:
     # continue

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 def make_request(method, params):
     url = "https://eurzad.finn.pl/gmczechowicedziedzice/"+method
-    body = {"id":1,"method": method, "params": params,"jsonrpc":"2.0"}
+    body = {"id":1,"method": method, "params": params, "jsonrpc":"2.0"}
     req = urllib.request.Request(url)
 
     jsondata = json.dumps(body)
@@ -60,18 +60,29 @@ def get_rejestr_entry(id, tytul, callback):
 def get_rejestry(przegladane_rejestry, callback):
     method = "/kv/routeRejestryServiceManager0"
     rejestry = get_from_result(make_request(method, []))
+    print("Found rejestry")
+    visited = []
     for rej in rejestry:
         if rej["symbol"] not in przegladane_rejestry:
             continue
         count = przegladane_rejestry[rej["symbol"]]["count"]
         print(rej["symbol"] + " "+ rej["nazwa"])
         tomorrow = datetime.now()+ timedelta(days=1)
-        tomorrow_str = tomorrow.strftime("%d/%m/%YT%H:%M:%S.0")
+        tomorrow_str = tomorrow.strftime("%Y-%m-%dT00:00:00.000+01:00")
         def_filter = json.dumps({"szukaj":None,"prawo":None,"realizacja":None,"dataWydOd":None,"dataWydDo":tomorrow_str,"dataOglOd":None,"dataOglDo":None,"dataWOd":None,"dataWDo":None,"dodatkowe":[],"skorowidz":None})
-        response = json.loads(make_request("/kv/routeRejestryServiceManager1", [rej["symbol"], count, 1, "\"DEFAULT\"", def_filter]))
+        def_filter = json.dumps({"dataWydDo":tomorrow_str})
+
+        response = json.loads(make_request("/kv/routeRejestryServiceManager1", ["\"{}\"".format(rej["symbol"]), str(count), "1", "\"DEFAULT\"", def_filter]))
+
         result = json.loads(response["result"])
         for r in result["lista"]:
             print("{} {} {}".format(r["id"], r["dataW"], r["temat"]))
             get_rejestr_entry(r["id"], r["temat"], callback)
-            
+
         print("  ")
+        visited.append(rej["symbol"])
+
+    for r in przegladane_rejestry:
+        if r not in visited:
+            date = datetime.today().strftime('%Y-%m-%d %H:%M')
+            callback({"id": "invalid_" + r, "v": date, "title": "Nie można znaleźć rejestru: " + r, "data": date, "href": "None"})
