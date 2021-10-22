@@ -15,6 +15,10 @@ import datetime
 from bip_eurzad_utils import get_zamowienia_publiczne, get_rejestry
 import bip_utils
 import um_page
+import ssl
+import powiat
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 NEW_FOUND_FILE = "bip_new_found.txt"
 KNOWN_DOCS_FILE = 'bip_docs.txt'
@@ -31,14 +35,22 @@ def add_to_bip_if_required(s, bip, print_text):
 def section_found(s, bip, href):
     def text_formater(s, href):
         today_str = datetime.datetime.now().strftime("%Y-%m-%d")
-        return "{} On page: {} new version:\n{}\r\n".format(today_str, href, s["title"])
+        return "{} On page: {} new version:\n{} ({} {})\r\n".format(today_str, href, s["title"], s["id"], s["v"])
+
+    add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
+
+
+def powiat_section_found(s, bip, href):
+    def text_formater(s, href):
+        today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        return "{} On page: {} new version:\n{} ({})\r\n".format(today_str, href, s["title"], s["v"])
 
     add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
 
 
 def new_eurzad_doc_found(doc, bip):
     add_to_bip_if_required(doc, bip,
-                           lambda s: "{} On page: {} new version:\n{}\r\n".format(s["data"], s["href"], s["title"]))
+                           lambda s: "{} On page: {} new version:\n{} ({})\r\n".format(s["data"], s["href"], s["title"], s["id"]))
 
 
 def new_um_news_found(news, bip, href):
@@ -86,6 +98,8 @@ if __name__ == "__main__":
     um_page.get_um_aktualnosci(lambda s, href: new_um_news_found(s, bip, href))
     bip_utils.get_all_bip_links(lambda s, href: section_found(s, bip, href))
     get_eurzad()
+    powiat.get_aktualnosci(lambda s, href: powiat_section_found(s, bip, href))
+    powiat.get_bip(lambda s, href: powiat_section_found(s, bip, href))
 
     with open(KNOWN_DOCS_FILE, 'w') as outfile:
         # print(bip)
