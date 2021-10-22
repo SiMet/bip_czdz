@@ -43,7 +43,7 @@ def section_found(s, bip, href):
 def powiat_section_found(s, bip, href):
     def text_formater(s, href):
         today_str = datetime.datetime.now().strftime("%Y-%m-%d")
-        return "{} On page: {} new version:\n{} ({})\r\n".format(today_str, href, s["title"], s["v"])
+        return "{} On page: {} new version:\n{}\n{}\r\n".format(today_str, href, s["title"], s["href"])
 
     add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
 

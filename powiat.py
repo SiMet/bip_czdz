@@ -16,6 +16,7 @@ class PowiatPetcjePageParser(HTMLParser):
 
     def __init__(self):
         HTMLParser.__init__(self)
+        self.page_href = "https://powiat.bielsko.pl"
         self._tag_counter = 0
         self._date_tag = None
         self._title = None
@@ -30,6 +31,7 @@ class PowiatPetcjePageParser(HTMLParser):
             news["title"] = news["title"].strip()
             news["id"] = news["title"]
             news["v"] = news["href"]
+            news["href"] = self.page_href + news["href"]
             self.news_found(news, news["href"])
         
     def get_attr_value(self, attrs, name):
