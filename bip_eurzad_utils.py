@@ -67,7 +67,7 @@ def get_rejestry(przegladane_rejestry, callback):
             continue
         count = przegladane_rejestry[rej["symbol"]]["count"]
         print(rej["symbol"] + " "+ rej["nazwa"])
-        tomorrow = datetime.now()+ timedelta(days=1)
+        tomorrow = datetime.now()+ timedelta(weeks=3)
         tomorrow_str = tomorrow.strftime("%Y-%m-%dT00:00:00.000+01:00")
         def_filter = json.dumps({"szukaj":None,"prawo":None,"realizacja":None,"dataWydOd":None,"dataWydDo":tomorrow_str,"dataOglOd":None,"dataOglDo":None,"dataWOd":None,"dataWDo":None,"dodatkowe":[],"skorowidz":None})
         def_filter = json.dumps({"dataWydDo":tomorrow_str})
