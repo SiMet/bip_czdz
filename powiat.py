@@ -22,14 +22,17 @@ class PowiatPetcjePageParser(HTMLParser):
         self._title = None
         self.news_found = None
         self.last_open_tag = None
-        self._td_count = 0
         self.xpath = ""
+        self.is_in_tresc = False
+        self.is_in_p = False
+        self.is_in_href = False
+        self.news = None
 
     def __call_news_found(self, news):
         if self.news_found:
             news["date"] = news["date"].strip()
             news["title"] = news["title"].strip()
-            news["id"] = news["title"]
+            news["id"] = "Powiat-" + news["title"]
             news["v"] = news["href"]
             news["href"] = self.page_href + news["href"]
             self.news_found(news, news["href"])
@@ -42,6 +45,19 @@ class PowiatPetcjePageParser(HTMLParser):
         self.last_open_tag = tag
         if self._tag_counter > 0:
             self._tag_counter = self._tag_counter + 1
+        if tag == "div" and self.get_attr_value(attrs, "class") == "tresc":
+            self.is_in_tresc = True
+            self._tag_counter = 1
+        if not self.is_in_tresc:
+            return
+
+        if tag == "p":
+            self.news = {"id": None, "title": "", "date": "", "v": "1.0", "href": ""}
+            self.is_in_p = True
+        if tag == "a":
+            self.is_in_href = True
+            self.news["href"] = self.get_attr_value(attrs, "href")
+        return
         if tag == "tr":
             self.petycja = {"id": None, "title": "", "date": "", "v": "1.0", "href": ""}
             self.odpowiedz = {"id": None, "title": "Odpowiedź na:", "date": "", "v": "1.0", "href": ""}
@@ -61,26 +77,28 @@ class PowiatPetcjePageParser(HTMLParser):
             self.xpath = self.xpath[0:len(self.xpath)-len(f"/{tag}")]
         if self._tag_counter > 0:
             self._tag_counter = self._tag_counter - 1
-            if self._tag_counter == 0:
-                if self.petycja["href"]:
-                    self.__call_news_found(self.petycja)
-                if self.odpowiedz["href"]:
-                    self.__call_news_found(self.odpowiedz)
-                self.petycja = None
-                self.odpowiedz = None
+        else:
+            self.is_in_tresc = False
+
+        if self.is_in_tresc:
+            if tag == "p":
+                self.is_in_p = False
+            if tag == "a":
+                self.is_in_href = False
+                self.__call_news_found(self.news)
 
     def handle_data(self, data):
-        if self._tag_counter > 0:
-            if self._td_count == 1 and not self.xpath.endswith("/strong"):
-                self.petycja["date"] += data.strip().replace(":", "")
-                self.odpowiedz["date"] += data.strip().replace(":", "")
-            if self._td_count == 1 and self.xpath.endswith("/strong") and "Data złożenia petycji" not in data:
-                self.petycja["title"] += data.strip()
-                self.odpowiedz["title"] += data.strip()
-            if self._td_count == 2 and self.last_open_tag != "a" and not self.xpath.endswith("/strong"):
-                self.petycja["title"] += data.strip()
-                self.odpowiedz["title"] += data.strip()
-        
+        if self.is_in_tresc:
+            if self.is_in_p:
+                data_strip = data.strip()
+                if data_strip.startswith("Data odpowiedzi") or data_strip.startswith("Data złożenia"):
+                    self.news["date"] += data_strip[data_strip.find(":") + 1:]
+                else:
+                    if not data_strip.startswith("Imię i nazwisko/nazwa podmiotu"):
+                        self.news["title"] += data_strip
+            if self.is_in_href:
+                data_strip = data.strip()
+                self.news["title"] += data_strip
 
 class PowiatBIPPageParser(HTMLParser):
 
@@ -160,5 +178,4 @@ def get_bip(news_found):
             ]
     for href in links:
         get_page(news_found, href, PowiatBIPPageParser())
-
 
