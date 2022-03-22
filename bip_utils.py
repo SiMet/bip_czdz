@@ -22,6 +22,7 @@ links = [
 'https://www.bip.czechowice-dziedzice.pl/bipkod/20524865',  # Petycje 2019
 'https://www.bip.czechowice-dziedzice.pl/bipkod/22857351',  # Petycje 2020
 'https://www.bip.czechowice-dziedzice.pl/bipkod/25674068',  # Petycje 2021
+'https://www.bip.czechowice-dziedzice.pl/bipkod/28537971',  # Petycje 2022
 #'https://www.bip.czechowice-dziedzice.pl/bipkod/22097565',  # Protokoly w komisji skarg i wnioskow
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/012',  # Informacje o srodowisku i jego ochronie
 'https://www.bip.czechowice-dziedzice.pl/bipkod/008/097', # Obwieszczenia WOJEWODY ŚLĄSKIEGO

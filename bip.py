@@ -28,7 +28,7 @@ def add_to_bip_if_required(s, bip, print_text):
         bip[s["id"]] = s["v"]
         text = print_text(s)
         print(text)
-        f = open(NEW_FOUND_FILE, "a+")
+        f = open(NEW_FOUND_FILE, "a+", encoding="utf-8")
         f.write(text)
         f.close()
 
