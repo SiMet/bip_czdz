@@ -17,6 +17,8 @@ import bip_utils
 import um_page
 import ssl
 import powiat
+import logintrade
+
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -32,10 +34,19 @@ def add_to_bip_if_required(s, bip, print_text):
         f.write(text)
         f.close()
 
+
 def section_found(s, bip, href):
     def text_formater(s, href):
         today_str = datetime.datetime.now().strftime("%Y-%m-%d")
         return "{} On page: {} new version:\n{} ({} {})\r\n".format(today_str, href, s["title"], s["id"], s["v"])
+
+    add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
+
+
+def logintrade_section_found(s, bip, href):
+    def text_formater(s, href):
+        today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        return "{} {} {} new document:\n{}\n\n".format(s["order_id"], s["order_title"], href, s["title"])
 
     add_to_bip_if_required(s, bip, lambda s: text_formater(s, href))
 
@@ -93,13 +104,22 @@ if __name__ == "__main__":
     except IOError:
         print(f"Could not open {KNOWN_DOCS_FILE}")
         sys.exit(-1)
+    try:
+        um_page.get_um_komunikaty(lambda s, href: new_um_news_found(s, bip, href))
+        um_page.get_um_aktualnosci(lambda s, href: new_um_news_found(s, bip, href))
+        bip_utils.get_all_bip_links(lambda s, href: section_found(s, bip, href))
+        get_eurzad()
+        powiat.get_aktualnosci(lambda s, href: powiat_section_found(s, bip, href))
+        powiat.get_bip(lambda s, href: powiat_section_found(s, bip, href))
 
-    um_page.get_um_komunikaty(lambda s, href: new_um_news_found(s, bip, href))
-    um_page.get_um_aktualnosci(lambda s, href: new_um_news_found(s, bip, href))
-    bip_utils.get_all_bip_links(lambda s, href: section_found(s, bip, href))
-    get_eurzad()
-    powiat.get_aktualnosci(lambda s, href: powiat_section_found(s, bip, href))
-    powiat.get_bip(lambda s, href: powiat_section_found(s, bip, href))
+        logintrade.get_zamowienia("https://czechowice-dziedzice.logintrade.net/", lambda s, href: logintrade_section_found(s, bip, href))
+        logintrade.get_przetargi("https://czechowice-dziedzice.logintrade.net/", lambda s, href: logintrade_section_found(s, bip, href))
+        logintrade.get_zamowienia("https://powiat-bielsko.logintrade.net/", lambda s, href: logintrade_section_found(s, bip, href))
+    except Exception as e:
+        print("Exception during script")
+        f = open(NEW_FOUND_FILE,"a+")
+        f.write("Exception during fetch eurzad - {}\n".format(e.reason))
+        f.close()
 
     with open(KNOWN_DOCS_FILE, 'w') as outfile:
         # print(bip)
